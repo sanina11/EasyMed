@@ -1,69 +1,94 @@
-# MedicAppIPC — App de gestão de medicação
+# EasyMed — App Android de Gestão de Medicação
 
-Projeto académico (IPC) em **Kotlin + Jetpack Compose**, baseado no design Balsamiq fornecido.
+Projeto académico desenvolvido no âmbito da unidade curricular de **IPC** (Interfaces Pessoa-Computador), no Instituto Politécnico de Coimbra.
 
-## Como abrir no Android Studio
+A aplicação permite ao utilizador **registar medicações**, **definir horários de toma** e **acompanhar o histórico** das tomas efetuadas.
 
-1. Descomprime o ZIP para uma pasta — por exemplo `Documentos/MedicAppIPC`.
-2. Abre o **Android Studio** (versão Hedgehog 2023.1.1 ou mais recente).
-3. *File → Open* → seleciona a **pasta** `MedicAppIPC` (não um ficheiro).
-4. Quando o Android Studio perguntar pelo Gradle wrapper, escolhe **"Use Gradle wrapper"** (gera-se automaticamente).
-5. Aguarda o **Gradle Sync** terminar (pode demorar alguns minutos da primeira vez — vai descarregar dependências).
-6. Cria/usa um emulador Android (API 24 ou superior) ou liga um telemóvel por USB com Depuração USB ativada.
-7. Carrega no botão **Run ▶** (ou `Shift+F10`).
+---
 
-> Se aparecer "Missing gradle wrapper jar": menu *File → Sync Project with Gradle Files* — o Android Studio repõe os ficheiros em falta.
-> Se a primeira sincronização falhar por falta de SDK, aceita o que ele propõe instalar.
+## Tecnologias
 
-## O que está implementado
+- **Linguagem:** Kotlin
+- **UI:** Jetpack Compose
+- **Navegação:** Navigation Compose
+- **Tema:** Material 3
+- **Mínimo Android:** API 24 (Android 7.0)
+- **Compilado para:** API 34 (Android 14)
 
-| Ecrã | Composable | Notas |
-|---|---|---|
-| Splash | `SplashScreen` | Avança após 1,5s ou ao tocar |
-| Login | `LoginScreen` | Não valida credenciais (protótipo) |
-| Registar | `RegistarScreen` | Valida campos vazios + passwords iguais |
-| Dashboard | `DashboardScreen` | Lista do dia + checkbox para marcar tomado |
-| Adicionar | `AdicionarMedicacaoScreen` | Nome / Dosagem / Hora / Frequência |
-| Detalhe | `DetalheMedicacaoScreen` | Mostra estado "Tomado / Não tomado" e popup de confirmação |
-| Histórico | `HistoricoScreen` | Tomas agrupadas por data (Hoje / Ontem / data) |
-| Perfil | `PerfilScreen` | Avatar, nome, email, editar, terminar sessão |
+---
 
-A bottom navigation (Início / Histórico / Perfil) está em todos os ecrãs principais.
+## Estado atual
+
+Projeto em desenvolvimento incremental. Funcionalidades:
+
+- [x] Ecrã de Splash com logo
+- [ ] Ecrã de Login
+- [ ] Ecrã de Registo
+- [ ] Dashboard com lista de medicações do dia
+- [ ] Adicionar medicação
+- [ ] Detalhe da medicação (marcar como tomada)
+- [ ] Histórico de tomas agrupado por data
+- [ ] Perfil do utilizador
+- [ ] Persistência de dados (Room)
+
+---
+
+## Como correr
+
+### Pré-requisitos
+
+- **Android Studio** Hedgehog 2023.1.1 ou mais recente
+- **JDK 17** (vem incluído no Android Studio)
+- **SDK Android 34** instalado (via SDK Manager)
+- Emulador Android API 24+ ou dispositivo físico com Depuração USB ativada
+
+### Passos
+
+1. Clonar o repositório:
+   ```bash
+   git clone https://github.com/sanina11/EasyMed.git
+   ```
+2. Abrir a pasta no Android Studio (`File → Open`)
+3. Aguardar o **Gradle Sync** terminar (pode demorar alguns minutos da primeira vez)
+4. Selecionar um dispositivo no topo da janela
+5. Carregar no botão **Run ▶** (ou `Shift + F10`)
+
+---
+
+## Estrutura do projeto
+
+```
+app/src/main/
+├── java/pt/ipc/easymed/
+│   ├── MainActivity.kt          # Ponto de entrada da app
+│   ├── data/                    # Modelos de dados e repositório
+│   ├── navigation/              # Grafo de navegação (rotas)
+│   └── ui/
+│       ├── theme/               # Cores, tipografia, tema Material
+│       ├── components/          # Componentes reutilizáveis
+│       └── screens/             # Um ficheiro por ecrã
+└── res/
+    ├── drawable/                # Imagens (logo, ícones)
+    └── values/                  # strings.xml, colors.xml, themes.xml
+```
+
+---
 
 ## Arquitetura
 
-```
-app/src/main/java/pt/ipc/medicapp/
-├── MainActivity.kt            ← entry point, monta o tema e o NavGraph
-├── data/
-│   ├── Models.kt              ← Medicacao, RegistoToma, Utilizador, Frequencia
-│   └── MedicRepository.kt     ← repositório singleton em memória
-├── navigation/
-│   ├── Routes.kt
-│   └── AppNavGraph.kt         ← grafo de navegação Compose
-└── ui/
-    ├── theme/                 ← cores, tipografia, MedicAppTheme
-    ├── components/            ← AppLogo, AppBottomBar (reutilizáveis)
-    └── screens/               ← um ficheiro por ecrã
-```
+A app segue um padrão simples baseado em:
 
-### Dados
+- **Composables** (funções `@Composable`) para descrever a UI
+- **State hoisting** — o estado vive nos ecrãs, é passado para baixo, e os eventos sobem em callbacks
+- **Repositório singleton** em memória para gerir dados (a evoluir para Room)
+- **Navegação centralizada** no `AppNavGraph`, desacoplada dos ecrãs
 
-Como é um protótipo, **os dados estão só em memória** (`MedicRepository` singleton). Quando fechas a app, perde-se tudo. O repositório arranca com 3 medicações e algum histórico de exemplo, para o ecrã não ficar vazio na demo.
+Os ecrãs não conhecem outros ecrãs — recebem callbacks (`onEntrar`, `onRegistar`, etc.) e o `AppNavGraph` decide o que cada callback faz.
 
-Para passar para persistência: substituir `mutableStateListOf` por uma BD Room ou DataStore — a interface dos ecrãs não muda.
+---
 
-## Pequenos ajustes que podes querer fazer
+## Autora
 
-- **Logo**: em `ui/components/AppLogo.kt` está desenhada uma pílula em código — se preferires usar a imagem que tens no Balsamiq, substitui por um `Image(painter = painterResource(R.drawable.logo))` e mete o ficheiro em `res/drawable/`.
-- **Cores**: paleta em `ui/theme/Color.kt` (verde-água). Mexe à vontade.
-- **Fontes**: Material 3 default — se quiseres uma fonte específica, adiciona em `res/font/` e referência em `Type.kt`.
-- **Bottom nav clica em "Início" estando no Dashboard**: já está a tratar disso (no-op).
+**Sanina11** — Estudante de Engenharia Informática
 
-## Versões (testado com)
-
-- Android Studio Hedgehog/Iguana
-- Kotlin 1.9.24
-- AGP 8.5.2
-- Compose BOM 2024.06.00
-- minSdk 24, targetSdk/compileSdk 34
+[GitHub](https://github.com/sanina11)

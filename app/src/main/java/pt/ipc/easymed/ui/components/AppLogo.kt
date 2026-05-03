@@ -1,4 +1,4 @@
-package pt.ipc.medicapp.ui.components
+package pt.ipc.easymed.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

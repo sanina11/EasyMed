@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "pt.ipc.medicapp"
+    namespace = "pt.ipc.easymed"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "pt.ipc.medicapp"
+        applicationId = "pt.ipc.easymed"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

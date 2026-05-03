@@ -1,4 +1,4 @@
-package pt.ipc.medicapp.ui.theme
+package pt.ipc.easymed.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

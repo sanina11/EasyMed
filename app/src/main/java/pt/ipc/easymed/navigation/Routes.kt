@@ -1,4 +1,4 @@
-package pt.ipc.medicapp.navigation
+package pt.ipc.easymed.navigation
 
 object Routes {
     const val SPLASH        = "splash"
