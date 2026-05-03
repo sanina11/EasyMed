@@ -31,6 +31,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var erro by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -63,10 +64,25 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
+        if (erro != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = erro!!,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { onEntrar() },
+            onClick = {
+                if (email.isBlank() || password.isBlank()) {
+                    erro = "Preenche todos os campos."
+                } else {
+                    erro = null
+                    onEntrar()
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Entrar")
