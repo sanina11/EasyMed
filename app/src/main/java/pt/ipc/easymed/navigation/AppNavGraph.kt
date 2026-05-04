@@ -12,7 +12,7 @@ import pt.ipc.easymed.ui.screens.SplashScreen
 fun AppNavGraph() {
     val nav = rememberNavController()
 
-    NavHost(navController = nav, startDestination = Routes.REGISTAR) {
+    NavHost(navController = nav, startDestination = Routes.SPLASH) {
 
         composable(Routes.SPLASH) {
             SplashScreen(onContinuar = {
