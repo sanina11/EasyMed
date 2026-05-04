@@ -12,7 +12,7 @@ import pt.ipc.easymed.ui.screens.SplashScreen
 fun AppNavGraph() {
     val nav = rememberNavController()
 
-    NavHost(navController = nav, startDestination = Routes.LOGIN) {
+    NavHost(navController = nav, startDestination = Routes.REGISTAR) {
 
         composable(Routes.SPLASH) {
             SplashScreen(onContinuar = {
@@ -33,9 +33,10 @@ fun AppNavGraph() {
 
         composable(Routes.REGISTAR) {
             RegistarScreen(
-                onRegistar = { nav.popBackStack() },
-                onEntrar   = { nav.popBackStack() }
+                onRegistar = { nav.popBackStack() },   // volta ao Login
+                onEntrar = { nav.popBackStack() }      // volta ao Login
             )
         }
+
     }
 }
