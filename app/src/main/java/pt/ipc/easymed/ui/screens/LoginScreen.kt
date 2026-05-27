@@ -79,12 +79,7 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                if (email.isBlank() || password.isBlank()) {
-                    erro = "Preenche todos os campos."
-                } else {
-                    erro = null
-                    onEntrar()
-                }
+                onEntrar() // remove a validação toda temporariamente
             },
             modifier = Modifier.fillMaxWidth()
         ) {

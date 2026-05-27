@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import pt.ipc.easymed.ui.screens.LoginScreen
 import pt.ipc.easymed.ui.screens.RegistarScreen
 import pt.ipc.easymed.ui.screens.SplashScreen
+import pt.ipc.easymed.ui.screens.DashboardScreen
 
 @Composable
 fun AppNavGraph() {
@@ -25,7 +26,9 @@ fun AppNavGraph() {
         composable(Routes.LOGIN) {
             LoginScreen(
                 onEntrar = {
-                    // TODO: navegar para Dashboard quando o ecrã for criado
+                    nav.navigate(Routes.DASHBOARD) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    }
                 },
                 onRegistar = { nav.navigate(Routes.REGISTAR) }
             )
@@ -33,8 +36,15 @@ fun AppNavGraph() {
 
         composable(Routes.REGISTAR) {
             RegistarScreen(
-                onRegistar = { nav.popBackStack() },   // volta ao Login
-                onEntrar = { nav.popBackStack() }      // volta ao Login
+                onRegistar = { nav.popBackStack() },
+                onEntrar = { nav.popBackStack() }
+            )
+        }
+
+        composable(Routes.DASHBOARD) {
+            DashboardScreen(
+                onAdicionarClick = { /* TODO */ },
+                onMedicamentoClick = { /* TODO */ }
             )
         }
 
