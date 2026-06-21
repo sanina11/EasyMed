@@ -8,6 +8,8 @@ import pt.ipc.easymed.ui.screens.LoginScreen
 import pt.ipc.easymed.ui.screens.RegistarScreen
 import pt.ipc.easymed.ui.screens.SplashScreen
 import pt.ipc.easymed.ui.screens.DashboardScreen
+import pt.ipc.easymed.ui.screens.AdicionarScreen
+import pt.ipc.easymed.data.MedicationRepository
 
 @Composable
 fun AppNavGraph() {
@@ -43,10 +45,20 @@ fun AppNavGraph() {
 
         composable(Routes.DASHBOARD) {
             DashboardScreen(
-                onAdicionarClick = { /* TODO */ },
-                onMedicamentoClick = { /* TODO */ }
+                onAdicionarClick = { nav.navigate(Routes.ADICIONAR) },
+                onMedicamentoClick = { /* TODO: Navegar para detalhes quando implementado */ }
+            )
+        }
+
+        composable(Routes.ADICIONAR) {
+            AdicionarScreen(
+                onGuardar = { nome, dosagem, hora ->
+                    MedicationRepository.adicionarMedicamento(nome, dosagem, hora)
+                    nav.popBackStack()
+                },
+                onVoltar = { nav.popBackStack() }
             )
         }
 
     }
-}
+}
