@@ -1,5 +1,8 @@
 package pt.ipc.easymed.ui.screens
+
 import pt.ipc.easymed.ui.components.BottomNavigationBar
+import pt.ipc.easymed.data.Medicamento
+import pt.ipc.easymed.data.MedicationRepository
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,14 +21,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-data class Medicamento(
-    val id: Int,
-    val nome: String,
-    val dosagem: String,
-    val hora: String,
-    var tomado: Boolean = false
-)
-
 @Composable
 fun DashboardScreen(
     onAdicionarClick: () -> Unit,
@@ -34,15 +29,7 @@ fun DashboardScreen(
     val hoje = LocalDate.now()
         .format(DateTimeFormatter.ofPattern("'Hoje, 'dd MMM", Locale("pt")))
 
-    var medicamentos by remember {
-        mutableStateOf(
-            listOf(
-                Medicamento(1, "Paracetamol", "500mg", "08:00", tomado = true),
-                Medicamento(2, "Ibuprofeno", "", "13:00"),
-                Medicamento(3, "Gabapentina", "", "16:30")
-            )
-        )
-    }
+    val medicamentos = MedicationRepository.getMedicamentos()
 
     Scaffold(
         bottomBar = {
@@ -63,18 +50,36 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(2.dp)
-            ) {
-                LazyColumn(modifier = Modifier.padding(8.dp)) {
-                    items(medicamentos) { med ->
-                        MedicamentoItem(
-                            medicamento = med,
-                            onClick = { onMedicamentoClick(med) }
-                        )
-                        if (med != medicamentos.last()) {
-                            HorizontalDivider()
+            if (medicamentos.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Nenhum medicamento agendado para hoje.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray
+                    )
+                }
+            } else {
+                Card(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    elevation = CardDefaults.cardElevation(2.dp)
+                ) {
+                    LazyColumn(modifier = Modifier.padding(8.dp)) {
+                        items(medicamentos) { med ->
+                            MedicamentoItem(
+                                medicamento = med,
+                                onClick = { onMedicamentoClick(med) },
+                                onTomadoToggle = {
+                                    MedicationRepository.alternarTomado(med.id)
+                                }
+                            )
+                            if (med != medicamentos.last()) {
+                                HorizontalDivider()
+                            }
                         }
                     }
                 }
@@ -88,7 +93,7 @@ fun DashboardScreen(
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("+ Adicionar")
+                Text("Adicionar Medicação")
             }
         }
     }
@@ -97,7 +102,8 @@ fun DashboardScreen(
 @Composable
 fun MedicamentoItem(
     medicamento: Medicamento,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onTomadoToggle: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -120,16 +126,18 @@ fun MedicamentoItem(
             )
         }
         if (medicamento.tomado) {
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = "Tomado",
-                tint = Color(0xFF4CAF50)
-            )
+            IconButton(onClick = onTomadoToggle) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = "Tomado",
+                    tint = Color(0xFF4CAF50)
+                )
+            }
         } else {
             RadioButton(
                 selected = false,
-                onClick = { onClick() }
+                onClick = onTomadoToggle
             )
         }
     }
-}
+}
