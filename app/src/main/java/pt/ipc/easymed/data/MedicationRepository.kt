@@ -33,4 +33,8 @@ object MedicationRepository {
             _medicamentos[index] = med.copy(tomado = !med.tomado)
         }
     }
+
+    fun eliminarMedicamento(id: Int) {
+        _medicamentos.removeAll { it.id == id }
+    }
 }
