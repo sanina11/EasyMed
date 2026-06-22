@@ -10,6 +10,14 @@ data class Medicamento(
     val tomado: Boolean = false
 )
 
+data class HistoricoToma(
+    val data: String,
+    val nome: String,
+    val dosagem: String,
+    val hora: String,
+    val tomado: Boolean
+)
+
 object MedicationRepository {
     private val _medicamentos = mutableStateListOf(
         Medicamento(1, "Paracetamol", "500mg", "08:00", tomado = true),
@@ -17,8 +25,19 @@ object MedicationRepository {
         Medicamento(3, "Gabapentina", "", "16:30")
     )
 
+    private val _historico = mutableStateListOf(
+        HistoricoToma("Ontem, 21 Jun", "Paracetamol", "500mg", "08:00", true),
+        HistoricoToma("Ontem, 21 Jun", "Ibuprofeno", "", "13:00", false),
+        HistoricoToma("20 Jun", "Paracetamol", "500mg", "08:00", true),
+        HistoricoToma("20 Jun", "Gabapentina", "", "16:30", true)
+    )
+
     fun getMedicamentos(): List<Medicamento> {
         return _medicamentos
+    }
+
+    fun getHistorico(): List<HistoricoToma> {
+        return _historico
     }
 
     fun adicionarMedicamento(nome: String, dosagem: String, hora: String) {
