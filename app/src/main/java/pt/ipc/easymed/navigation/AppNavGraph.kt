@@ -1,14 +1,17 @@
 package pt.ipc.easymed.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import pt.ipc.easymed.ui.screens.LoginScreen
 import pt.ipc.easymed.ui.screens.RegistarScreen
 import pt.ipc.easymed.ui.screens.SplashScreen
 import pt.ipc.easymed.ui.screens.DashboardScreen
 import pt.ipc.easymed.ui.screens.AdicionarScreen
+import pt.ipc.easymed.ui.screens.DetalheScreen
 import pt.ipc.easymed.data.MedicationRepository
 
 @Composable
@@ -46,7 +49,9 @@ fun AppNavGraph() {
         composable(Routes.DASHBOARD) {
             DashboardScreen(
                 onAdicionarClick = { nav.navigate(Routes.ADICIONAR) },
-                onMedicamentoClick = { /* TODO: Navegar para detalhes quando implementado */ }
+                onMedicamentoClick = { med ->
+                    nav.navigate(Routes.detalhe(med.id.toLong()))
+                }
             )
         }
 
@@ -60,5 +65,18 @@ fun AppNavGraph() {
             )
         }
 
+        composable(
+            route = Routes.DETALHE,
+            arguments = listOf(navArgument("medId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val medId = backStackEntry.arguments?.getInt("medId") ?: 0
+            DetalheScreen(
+                medId = medId,
+                onVoltar = { nav.popBackStack() },
+                onEliminado = { nav.popBackStack() }
+            )
+        }
+
     }
-}
+}
+
