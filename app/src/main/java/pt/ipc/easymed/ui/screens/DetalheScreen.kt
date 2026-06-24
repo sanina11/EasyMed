@@ -27,9 +27,8 @@ fun DetalheScreen(
     onEliminado: () -> Unit
 ) {
     val medicamentos = MedicationRepository.getMedicamentos()
-    val medicamento = remember(medicamentos, medId) {
-        medicamentos.find { it.id == medId }
-    }
+    val medicamento = medicamentos.find { it.id == medId }
+    var mostrarDialogoConfirmacao by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -204,8 +203,7 @@ fun DetalheScreen(
 
                     OutlinedButton(
                         onClick = {
-                            MedicationRepository.eliminarMedicamento(medicamento.id)
-                            onEliminado()
+                            mostrarDialogoConfirmacao = true
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -229,6 +227,36 @@ fun DetalheScreen(
                             "Eliminar Medicação",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    if (mostrarDialogoConfirmacao && medicamento != null) {
+                        AlertDialog(
+                            onDismissRequest = { mostrarDialogoConfirmacao = false },
+                            title = {
+                                Text(text = "Eliminar Medicação", fontWeight = FontWeight.Bold)
+                            },
+                            text = {
+                                Text(text = "Tem a certeza que deseja eliminar a medicação de \"${medicamento.nome}\"?")
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        mostrarDialogoConfirmacao = false
+                                        MedicationRepository.eliminarMedicamento(medicamento.id)
+                                        onEliminado()
+                                    }
+                                ) {
+                                    Text("Eliminar", color = MaterialTheme.colorScheme.error)
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = { mostrarDialogoConfirmacao = false }
+                                ) {
+                                    Text("Cancelar")
+                                }
+                            }
                         )
                     }
                 }
