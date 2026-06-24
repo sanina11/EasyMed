@@ -18,7 +18,8 @@ data class MedicamentoEntity(
     val nome: String,
     val dosagem: String,
     val hora: String,
-    val tomado: Boolean
+    val tomado: Boolean,
+    val frequencia: String = ""
 )
 
 @Entity(tableName = "historico_toma")
@@ -31,8 +32,8 @@ data class HistoricoTomaEntity(
     val tomado: Boolean
 )
 
-fun MedicamentoEntity.toDomain() = Medicamento(id, nome, dosagem, hora, tomado)
-fun Medicamento.toEntity() = MedicamentoEntity(id, nome, dosagem, hora, tomado)
+fun MedicamentoEntity.toDomain() = Medicamento(id, nome, dosagem, hora, tomado, frequencia)
+fun Medicamento.toEntity() = MedicamentoEntity(id, nome, dosagem, hora, tomado, frequencia)
 
 fun HistoricoTomaEntity.toDomain() = HistoricoToma(data, nome, dosagem, hora, tomado)
 fun HistoricoToma.toEntity() = HistoricoTomaEntity(data = data, nome = nome, dosagem = dosagem, hora = hora, tomado = tomado)
@@ -55,7 +56,7 @@ interface MedicationDao {
     suspend fun insertHistorico(historico: HistoricoTomaEntity)
 }
 
-@Database(entities = [MedicamentoEntity::class, HistoricoTomaEntity::class], version = 1, exportSchema = false)
+@Database(entities = [MedicamentoEntity::class, HistoricoTomaEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun medicationDao(): MedicationDao
 
@@ -69,7 +70,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "easymed_database"
-                ).build()
+                )
+                .fallbackToDestructiveMigration()
+                .build()
                 INSTANCE = instance
                 instance
             }

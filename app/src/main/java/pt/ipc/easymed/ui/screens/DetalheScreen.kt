@@ -29,6 +29,7 @@ fun DetalheScreen(
     val medicamentos = MedicationRepository.getMedicamentos()
     val medicamento = medicamentos.find { it.id == medId }
     var mostrarDialogoConfirmacao by remember { mutableStateOf(false) }
+    var mostrarDialogoConfirmarToma by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -157,6 +158,29 @@ fun DetalheScreen(
                                 }
                             }
 
+                            // Info Frequência
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = "Frequência",
+                                    tint = MaterialTheme.colorScheme.secondary
+                                )
+                                Column {
+                                    Text(
+                                        text = "Frequência",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = Color.Gray
+                                    )
+                                    Text(
+                                        text = if (medicamento.frequencia.isNotEmpty()) medicamento.frequencia else "Sem frequência especificada",
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+
                             // Info Estado
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -184,7 +208,11 @@ fun DetalheScreen(
                     // Botões de Ação
                     Button(
                         onClick = {
-                            MedicationRepository.alternarTomado(medicamento.id)
+                            if (medicamento.tomado) {
+                                MedicationRepository.alternarTomado(medicamento.id)
+                            } else {
+                                mostrarDialogoConfirmarToma = true
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -253,6 +281,35 @@ fun DetalheScreen(
                             dismissButton = {
                                 TextButton(
                                     onClick = { mostrarDialogoConfirmacao = false }
+                                ) {
+                                    Text("Cancelar")
+                                }
+                            }
+                        )
+                    }
+
+                    if (mostrarDialogoConfirmarToma && medicamento != null) {
+                        AlertDialog(
+                            onDismissRequest = { mostrarDialogoConfirmarToma = false },
+                            title = {
+                                Text(text = "Confirmar Toma", fontWeight = FontWeight.Bold)
+                            },
+                            text = {
+                                Text(text = "Deseja registar que tomou a medicação de \"${medicamento.nome}\"?")
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        mostrarDialogoConfirmarToma = false
+                                        MedicationRepository.alternarTomado(medicamento.id)
+                                    }
+                                ) {
+                                    Text("Confirmar", fontWeight = FontWeight.Bold)
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = { mostrarDialogoConfirmarToma = false }
                                 ) {
                                     Text("Cancelar")
                                 }

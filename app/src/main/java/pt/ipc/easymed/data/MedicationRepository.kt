@@ -15,7 +15,8 @@ data class Medicamento(
     val nome: String,
     val dosagem: String,
     val hora: String,
-    val tomado: Boolean = false
+    val tomado: Boolean = false,
+    val frequencia: String = ""
 )
 
 data class HistoricoToma(
@@ -40,9 +41,9 @@ object MedicationRepository {
                 _medicamentos.clear()
                 if (dbMeds.isEmpty()) {
                     val defaults = listOf(
-                        Medicamento(1, "Paracetamol", "500mg", "08:00", tomado = true),
-                        Medicamento(2, "Ibuprofeno", "", "13:00"),
-                        Medicamento(3, "Gabapentina", "", "16:30")
+                        Medicamento(1, "Paracetamol", "500mg", "08:00", tomado = true, frequencia = "Diário"),
+                        Medicamento(2, "Ibuprofeno", "", "13:00", frequencia = "8h/8h"),
+                        Medicamento(3, "Gabapentina", "", "16:30", frequencia = "Diário")
                     )
                     _medicamentos.addAll(defaults)
                     CoroutineScope(Dispatchers.IO).launch {
@@ -79,9 +80,9 @@ object MedicationRepository {
         return _historico
     }
 
-    fun adicionarMedicamento(nome: String, dosagem: String, hora: String) {
+    fun adicionarMedicamento(nome: String, dosagem: String, hora: String, frequencia: String) {
         val novoId = (_medicamentos.maxOfOrNull { it.id } ?: 0) + 1
-        val novo = Medicamento(novoId, nome, dosagem, hora)
+        val novo = Medicamento(novoId, nome, dosagem, hora, frequencia = frequencia)
         _medicamentos.add(novo)
         CoroutineScope(Dispatchers.IO).launch {
             database.medicationDao().insertMedicamento(novo.toEntity())

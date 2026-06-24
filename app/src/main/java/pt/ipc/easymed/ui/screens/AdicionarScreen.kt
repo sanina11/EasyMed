@@ -24,11 +24,12 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdicionarScreen(
-    onGuardar: (nome: String, dosagem: String, hora: String) -> Unit,
+    onGuardar: (nome: String, dosagem: String, hora: String, frequencia: String) -> Unit,
     onVoltar: () -> Unit
 ) {
     var nome by remember { mutableStateOf("") }
     var dosagem by remember { mutableStateOf("") }
+    var frequencia by remember { mutableStateOf("") }
     var hora by remember { mutableStateOf("") }
     var erro by remember { mutableStateOf<String?>(null) }
 
@@ -152,6 +153,22 @@ fun AdicionarScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
 
+                        // Frequência
+                        OutlinedTextField(
+                            value = frequencia,
+                            onValueChange = { frequencia = it },
+                            label = { Text("Frequência (Opcional)") },
+                            placeholder = { Text("Ex: Diário, de 12h em 12h") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = null
+                                )
+                            },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+
                         // Hora de Toma
                         OutlinedTextField(
                             value = hora,
@@ -199,7 +216,7 @@ fun AdicionarScreen(
                                 erro = "A hora da toma é obrigatória."
                             }
                             else -> {
-                                onGuardar(nome, dosagem, hora)
+                                onGuardar(nome, dosagem, hora, frequencia)
                             }
                         }
                     },

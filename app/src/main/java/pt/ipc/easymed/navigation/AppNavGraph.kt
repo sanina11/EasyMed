@@ -109,8 +109,8 @@ fun AppNavGraph() {
 
         composable(Routes.ADICIONAR) {
             AdicionarScreen(
-                onGuardar = { nome, dosagem, hora ->
-                    MedicationRepository.adicionarMedicamento(nome, dosagem, hora)
+                onGuardar = { nome, dosagem, hora, frequencia ->
+                    MedicationRepository.adicionarMedicamento(nome, dosagem, hora, frequencia)
                     nav.popBackStack()
                 },
                 onVoltar = { nav.popBackStack() }
