@@ -22,14 +22,14 @@ A aplicação permite ao utilizador **registar medicações**, **definir horári
 Projeto em desenvolvimento incremental. Funcionalidades:
 
 - [x] Ecrã de Splash com logo
-- [ ] Ecrã de Login
-- [ ] Ecrã de Registo
-- [ ] Dashboard com lista de medicações do dia
-- [ ] Adicionar medicação
-- [ ] Detalhe da medicação (marcar como tomada)
-- [ ] Histórico de tomas agrupado por data
-- [ ] Perfil do utilizador
-- [ ] Persistência de dados (Room)
+- [x] Ecrã de Login
+- [x] Ecrã de Registo
+- [x] Dashboard com lista de medicações do dia
+- [x] Adicionar medicação
+- [x] Detalhe da medicação (marcar como tomada)
+- [x] Histórico de tomas agrupado por data
+- [x] Perfil do utilizador
+- [x] Persistência de dados (Room)
 
 ---
 

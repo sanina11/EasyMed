@@ -24,7 +24,10 @@ import java.util.Locale
 @Composable
 fun DashboardScreen(
     onAdicionarClick: () -> Unit,
-    onMedicamentoClick: (Medicamento) -> Unit
+    onMedicamentoClick: (Medicamento) -> Unit,
+    onInicioClick: () -> Unit,
+    onHistoricoClick: () -> Unit,
+    onPerfilClick: () -> Unit
 ) {
     val hoje = LocalDate.now()
         .format(DateTimeFormatter.ofPattern("'Hoje, 'dd MMM", Locale("pt")))
@@ -33,7 +36,12 @@ fun DashboardScreen(
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(selected = "inicio")
+            BottomNavigationBar(
+                selected = "inicio",
+                onInicioClick = onInicioClick,
+                onHistoricoClick = onHistoricoClick,
+                onPerfilClick = onPerfilClick
+            )
         }
     ) { padding ->
         Column(

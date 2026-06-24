@@ -12,6 +12,8 @@ import pt.ipc.easymed.ui.screens.SplashScreen
 import pt.ipc.easymed.ui.screens.DashboardScreen
 import pt.ipc.easymed.ui.screens.AdicionarScreen
 import pt.ipc.easymed.ui.screens.DetalheScreen
+import pt.ipc.easymed.ui.screens.HistoricoScreen
+import pt.ipc.easymed.ui.screens.PerfilScreen
 import pt.ipc.easymed.data.MedicationRepository
 
 @Composable
@@ -51,6 +53,56 @@ fun AppNavGraph() {
                 onAdicionarClick = { nav.navigate(Routes.ADICIONAR) },
                 onMedicamentoClick = { med ->
                     nav.navigate(Routes.detalhe(med.id.toLong()))
+                },
+                onInicioClick = { /* Já no Dashboard */ },
+                onHistoricoClick = {
+                    nav.navigate(Routes.HISTORICO) {
+                        launchSingleTop = true
+                    }
+                },
+                onPerfilClick = {
+                    nav.navigate(Routes.PERFIL) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(Routes.HISTORICO) {
+            HistoricoScreen(
+                onInicioClick = {
+                    nav.navigate(Routes.DASHBOARD) {
+                        popUpTo(Routes.DASHBOARD) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                },
+                onHistoricoClick = { /* Já no Histórico */ },
+                onPerfilClick = {
+                    nav.navigate(Routes.PERFIL) {
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(Routes.PERFIL) {
+            PerfilScreen(
+                onInicioClick = {
+                    nav.navigate(Routes.DASHBOARD) {
+                        popUpTo(Routes.DASHBOARD) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                },
+                onHistoricoClick = {
+                    nav.navigate(Routes.HISTORICO) {
+                        launchSingleTop = true
+                    }
+                },
+                onPerfilClick = { /* Já no Perfil */ },
+                onLogout = {
+                    nav.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }
