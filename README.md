@@ -87,8 +87,9 @@ Os ecrãs não conhecem outros ecrãs — recebem callbacks (`onEntrar`, `onRegi
 
 ---
 
-## Autora
+## Autor
 
-**Sanina11** — Estudante de Engenharia Informática
+**Tiago Sanina** — Estudante de Engenharia Informática
+**Miguel Sanina** — Estudante de Engenharia Informática
 
 [GitHub](https://github.com/sanina11)
